@@ -1,0 +1,590 @@
+{
+    "THQ": [
+        {
+            "symbol": "LLY",
+            "weight": 9.50
+        },
+        {
+            "symbol": "UNH",
+            "weight": 9.50
+        },
+        {
+            "symbol": "ABBV",
+            "weight": 5.70
+        },
+        {
+            "symbol": "JNJ",
+            "weight": 5.20
+        },
+        {
+            "symbol": "TMO",
+            "weight": 4.50
+        },
+        {
+            "symbol": "MRK",
+            "weight": 4.10
+        },
+        {
+            "symbol": "ABT",
+            "weight": 3.90
+        },
+        {
+            "symbol": "ISRG",
+            "weight": 3.50
+        },
+        {
+            "symbol": "ELV",
+            "weight": 3.10
+        },
+        {
+            "symbol": "DHR",
+            "weight": 2.80
+        },
+        {
+            "symbol": "PFE",
+            "weight": 2.60
+        },
+        {
+            "symbol": "MDT",
+            "weight": 2.45
+        },
+        {
+            "symbol": "BMY",
+            "weight": 2.39
+        },
+        {
+            "symbol": "INSP",
+            "weight": 2.29
+        },
+        {
+            "symbol": "BDX",
+            "weight": 2.25
+        },
+        {
+            "symbol": "SYK",
+            "weight": 2.10
+        },
+        {
+            "symbol": "BSX",
+            "weight": 1.95
+        },
+        {
+            "symbol": "VRTX",
+            "weight": 1.85
+        },
+        {
+            "symbol": "REGN",
+            "weight": 1.70
+        },
+        {
+            "symbol": "ZTS",
+            "weight": 1.60
+        },
+        {
+            "symbol": "WELL",
+            "weight": 1.55
+        },
+        {
+            "symbol": "VTR",
+            "weight": 1.40
+        },
+        {
+            "symbol": "HCA",
+            "weight": 1.30
+        },
+        {
+            "symbol": "CI",
+            "weight": 1.25
+        },
+        {
+            "symbol": "CVS",
+            "weight": 1.15
+        }
+    ],
+    "BMEZ": [
+        {
+            "symbol": "ALNY",
+            "weight": 5.48
+        },
+        {
+            "symbol": "VEEV",
+            "weight": 3.54
+        },
+        {
+            "symbol": "INSM",
+            "weight": 2.65
+        },
+        {
+            "symbol": "ABT",
+            "weight": 2.52
+        },
+        {
+            "symbol": "WST",
+            "weight": 2.52
+        },
+        {
+            "symbol": "2269.HK",
+            "weight": 2.44
+        },
+        {
+            "symbol": "IDXX",
+            "weight": 2.39
+        },
+        {
+            "symbol": "DXCM",
+            "weight": 2.12
+        },
+        {
+            "symbol": "GALD.SW",
+            "weight": 2.00
+        },
+        {
+            "symbol": "RYTM",
+            "weight": 1.91
+        },
+        {
+            "symbol": "PODD",
+            "weight": 1.85
+        },
+        {
+            "symbol": "EW",
+            "weight": 1.72
+        },
+        {
+            "symbol": "JNJ",
+            "weight": 1.63
+        },
+        {
+            "symbol": "RGEN",
+            "weight": 1.63
+        },
+        {
+            "symbol": "MDT",
+            "weight": 1.61
+        },
+        {
+            "symbol": "SOON.SW",
+            "weight": 1.60
+        },
+        {
+            "symbol": "GMAB",
+            "weight": 1.55
+        },
+        {
+            "symbol": "EXAS",
+            "weight": 1.47
+        },
+        {
+            "symbol": "THC",
+            "weight": 1.47
+        },
+        {
+            "symbol": "GH",
+            "weight": 1.38
+        },
+        {
+            "symbol": "NBIX",
+            "weight": 1.31
+        },
+        {
+            "symbol": "IMCR",
+            "weight": 1.19
+        },
+        {
+            "symbol": "NUVL",
+            "weight": 1.19
+        },
+        {
+            "symbol": "SYK",
+            "weight": 1.11
+        },
+        {
+            "symbol": "NTRA",
+            "weight": 1.11
+        }
+    ],
+    "THW": [
+        {
+            "symbol": "AZN",
+            "weight": 5.27
+        },
+        {
+            "symbol": "ABVX",
+            "weight": 4.92
+        },
+        {
+            "symbol": "NVO",
+            "weight": 4.31
+        },
+        {
+            "symbol": "QURE",
+            "weight": 3.89
+        },
+        {
+            "symbol": "SNY",
+            "weight": 3.51
+        },
+        {
+            "symbol": "ABBV",
+            "weight": 3.03
+        },
+        {
+            "symbol": "ABT",
+            "weight": 2.94
+        },
+        {
+            "symbol": "MRK",
+            "weight": 2.80
+        },
+        {
+            "symbol": "RHHBY",
+            "weight": 2.65
+        },
+        {
+            "symbol": "DHR",
+            "weight": 2.42
+        },
+        {
+            "symbol": "MDT",
+            "weight": 2.36
+        },
+        {
+            "symbol": "ISRG",
+            "weight": 2.28
+        },
+        {
+            "symbol": "LLY",
+            "weight": 2.04
+        },
+        {
+            "symbol": "OXB.L",
+            "weight": 1.93
+        },
+        {
+            "symbol": "INSP",
+            "weight": 1.70
+        },
+        {
+            "symbol": "TMO",
+            "weight": 1.63
+        },
+        {
+            "symbol": "ZTS",
+            "weight": 1.49
+        },
+        {
+            "symbol": "BSX",
+            "weight": 1.49
+        },
+        {
+            "symbol": "VTR",
+            "weight": 1.47
+        },
+        {
+            "symbol": "LONN.SW",
+            "weight": 1.40
+        },
+        {
+            "symbol": "BDX",
+            "weight": 1.39
+        },
+        {
+            "symbol": "WELL",
+            "weight": 1.35
+        },
+        {
+            "symbol": "CVS",
+            "weight": 1.16
+        },
+        {
+            "symbol": "ARGX",
+            "weight": 1.13
+        },
+        {
+            "symbol": "NAMS",
+            "weight": 1.05
+        }
+    ],
+    "HQL": [
+        {
+            "symbol": "AMGN",
+            "weight": 4.13
+        },
+        {
+            "symbol": "REGN",
+            "weight": 3.76
+        },
+        {
+            "symbol": "INSM",
+            "weight": 3.14
+        },
+        {
+            "symbol": "QURE",
+            "weight": 2.97
+        },
+        {
+            "symbol": "VRTX",
+            "weight": 2.78
+        },
+        {
+            "symbol": "ARGX",
+            "weight": 2.61
+        },
+        {
+            "symbol": "PCVX",
+            "weight": 2.52
+        },
+        {
+            "symbol": "PSNL",
+            "weight": 2.43
+        },
+        {
+            "symbol": "RARE",
+            "weight": 2.32
+        },
+        {
+            "symbol": "ALNY",
+            "weight": 2.27
+        },
+        {
+            "symbol": "DYNE",
+            "weight": 2.15
+        },
+        {
+            "symbol": "DNLI",
+            "weight": 2.12
+        },
+        {
+            "symbol": "XENE",
+            "weight": 1.99
+        },
+        {
+            "symbol": "CRNX",
+            "weight": 1.40
+        },
+        {
+            "symbol": "EWTX",
+            "weight": 1.76
+        },
+        {
+            "symbol": "CYTK",
+            "weight": 1.71
+        },
+        {
+            "symbol": "IMVT",
+            "weight": 1.66
+        },
+        {
+            "symbol": "FULC",
+            "weight": 1.59
+        },
+        {
+            "symbol": "SRPT",
+            "weight": 1.49
+        },
+        {
+            "symbol": "AXSM",
+            "weight": 1.43
+        },
+        {
+            "symbol": "EYPT",
+            "weight": 1.42
+        },
+        {
+            "symbol": "IDYA",
+            "weight": 1.36
+        }
+    ],
+    "GRX": [
+        {
+            "symbol": "ABBV",
+            "weight": 3.60
+        },
+        {
+            "symbol": "THC",
+            "weight": 2.86
+        },
+        {
+            "symbol": "JNJ",
+            "weight": 2.43
+        },
+        {
+            "symbol": "CI",
+            "weight": 2.36
+        },
+        {
+            "symbol": "OPCH",
+            "weight": 2.33
+        },
+        {
+            "symbol": "TEVA",
+            "weight": 2.11
+        },
+        {
+            "symbol": "COR",
+            "weight": 2.07
+        },
+        {
+            "symbol": "MRK",
+            "weight": 2.05
+        },
+        {
+            "symbol": "HALO",
+            "weight": 2.00
+        },
+        {
+            "symbol": "POST",
+            "weight": 1.97
+        },
+        {
+            "symbol": "LH",
+            "weight": 1.84
+        },
+        {
+            "symbol": "HCA",
+            "weight": 1.79
+        },
+        {
+            "symbol": "KR",
+            "weight": 1.77
+        },
+        {
+            "symbol": "ZBH",
+            "weight": 1.74
+        },
+        {
+            "symbol": "BRBR",
+            "weight": 1.71
+        },
+        {
+            "symbol": "SJM",
+            "weight": 1.71
+        },
+        {
+            "symbol": "TMO",
+            "weight": 1.70
+        },
+        {
+            "symbol": "ELV",
+            "weight": 1.69
+        },
+        {
+            "symbol": "NSRGY",
+            "weight": 1.68
+        },
+        {
+            "symbol": "CVS",
+            "weight": 1.63
+        },
+        {
+            "symbol": "KRYAY",
+            "weight": 1.57
+        },
+        {
+            "symbol": "COO",
+            "weight": 1.54
+        },
+        {
+            "symbol": "ITGR",
+            "weight": 1.54
+        },
+        {
+            "symbol": "CHE",
+            "weight": 1.50
+        }
+    ],
+    "HQH": [
+        {
+            "symbol": "AMGN",
+            "weight": 3.60
+        },
+        {
+            "symbol": "QURE",
+            "weight": 3.08
+        },
+        {
+            "symbol": "REGN",
+            "weight": 2.85
+        },
+        {
+            "symbol": "PCVX",
+            "weight": 2.43
+        },
+        {
+            "symbol": "ARGX",
+            "weight": 2.29
+        },
+        {
+            "symbol": "RARE",
+            "weight": 2.03
+        },
+        {
+            "symbol": "INSM",
+            "weight": 1.96
+        },
+        {
+            "symbol": "INSP",
+            "weight": 1.86
+        },
+        {
+            "symbol": "LLY",
+            "weight": 1.78
+        },
+        {
+            "symbol": "ABT",
+            "weight": 1.75
+        },
+        {
+            "symbol": "PSNL",
+            "weight": 1.63
+        },
+        {
+            "symbol": "XENE",
+            "weight": 1.63
+        },
+        {
+            "symbol": "SRPT",
+            "weight": 1.61
+        },
+        {
+            "symbol": "ALNY",
+            "weight": 1.59
+        },
+        {
+            "symbol": "DHR",
+            "weight": 1.56
+        },
+        {
+            "symbol": "CYTK",
+            "weight": 1.47
+        },
+        {
+            "symbol": "VRTX",
+            "weight": 1.45
+        },
+        {
+            "symbol": "CRNX",
+            "weight": 1.40
+        },
+        {
+            "symbol": "HUM",
+            "weight": 1.39
+        },
+        {
+            "symbol": "EYPT",
+            "weight": 1.36
+        },
+        {
+            "symbol": "MRK",
+            "weight": 1.35
+        },
+        {
+            "symbol": "IMVT",
+            "weight": 1.28
+        },
+        {
+            "symbol": "TECX",
+            "weight": 1.28
+        }
+    ]
+}
