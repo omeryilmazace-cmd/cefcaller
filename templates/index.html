@@ -4,179 +4,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEF Implied NAV Tracker</title>
+    <title>CEF Monitor Pro</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #0d0e12;
+            --card-bg: #15171e;
+            --card-border: #1f222b;
+            --text-main: #e0e0e0;
+            --text-muted: #858b98;
+            --accent-primary: #3b82f6;
+            /* Blue */
+            --pos-color: #10b981;
+            /* Green */
+            --neg-color: #ef4444;
+            /* Red */
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
             margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 13px;
+            /* Compact base size */
+        }
+
+        /* Header Area */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--card-border);
         }
 
         h1 {
-            color: #00bcd4;
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .last-updated {
-            color: #888;
-            font-size: 0.9em;
-            margin-bottom: 30px;
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--pos-color);
+            font-family: var(--font-mono);
         }
 
-        /* Summary Grid */
-        .grid {
+        button#refresh-btn {
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        button#refresh-btn:hover {
+            opacity: 0.9;
+        }
+
+        button#refresh-btn:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* KPI / Summaries Grid */
+        .summaries-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1400px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .card {
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 20px;
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .symbol {
-            font-size: 1.5em;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
+        .kpi-title {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
-        .nav-change {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 10px 0;
+        .kpi-value {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 700;
         }
 
-        /* Holdings Tables Grid */
-        .holdings-container {
+        .kpi-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Holdings Grid - The Main Event */
+        .holdings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1800px;
+            grid-template-columns: repeat(6, 1fr);
+            /* Force 6 columns */
+            gap: 10px;
+            align-items: start;
         }
 
-        .holdings-column {
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #333;
+        /* Responsive Breakpoints for Grid */
+        @media (max-width: 1400px) {
+
+            .holdings-grid,
+            .summaries-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
-        .column-header {
-            font-size: 1.2em;
-            font-weight: bold;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            text-align: center;
-            color: #00bcd4;
+        @media (max-width: 768px) {
+
+            .holdings-grid,
+            .summaries-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .holdings-grid,
+            .summaries-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .holdings-col {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 180px);
+            /* Fill screen height roughly */
+        }
+
+        .col-header {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 10px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Table Styling */
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em;
+            font-size: 11px;
+            /* Condensed font */
         }
 
         th {
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            color: var(--text-muted);
+            font-weight: 500;
+            text-align: right;
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--card-border);
+            cursor: pointer;
+            user-select: none;
+            font-size: 10px;
+            z-index: 5;
+        }
+
+        th:first-child {
             text-align: left;
-            color: #888;
-            padding: 5px;
+        }
+
+        th:hover {
+            color: var(--text-main);
         }
 
         td {
-            padding: 4px 5px;
-            border-bottom: 1px solid #2a2a2a;
+            padding: 4px 8px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-family: var(--font-mono);
         }
 
-        .positive {
-            color: #00e676;
+        td:first-child {
+            text-align: left;
+            font-family: var(--font-main);
+            color: var(--text-muted);
         }
 
-        .negative {
-            color: #ff5252;
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
         }
 
-        .neutral {
-            color: #aaaaaa;
+        /* Utility Colors */
+        .text-pos {
+            color: var(--pos-color);
         }
 
-        .log-box {
-            background: #000;
-            color: #0f0;
-            font-family: monospace;
-            padding: 10px;
-            width: 100%;
-            max-width: 800px;
-            height: 60px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .text-neg {
+            color: var(--neg-color);
+        }
+
+        .text-neu {
+            color: var(--text-muted);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>🚀 CEF Implied NAV Monitor</h1>
+    <header>
+        <h1>
+            <span>🚀 CEF Monitor</span>
+            <span id="status-badge" class="status-badge">Connecting...</span>
+        </h1>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <span id="timestamp" style="font-size:0.8rem; color:var(--text-muted);"></span>
+            <button id="refresh-btn" onclick="sendTelegram()">Send Tele Update</button>
+        </div>
+    </header>
 
-    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 30px;">
-        <div class="last-updated" id="timestamp" style="margin-bottom: 0;">Waiting for data...</div>
-        <button onclick="sendTelegram()" style="
-            background-color: #00bcd4; 
-            border: none; 
-            color: black; 
-            padding: 8px 16px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold;">
-            📢 Send Update
-        </button>
+    <!-- Top KPI Row -->
+    <div id="summaries-container" class="summaries-container">
+        <!-- JS Injected -->
     </div>
 
-    <div class="log-box" id="status-log">
-        System Status: Initializing...
+    <!-- Main Data Grid -->
+    <div id="holdings-container" class="holdings-grid">
+        <!-- JS Injected -->
     </div>
-
-    <!-- Top Summary Cards -->
-    <div class="grid" id="dashboard-grid"></div>
-
-    <!-- Detailed Holdings Columns -->
-    <div class="holdings-container" id="holdings-grid"></div>
 
     <script>
-
         let globalData = null;
-        let sortState = {}; // { "THQ": { col: "weight", dir: "desc" } }
+        let sortState = {};
 
         function toggleSort(cefName, col) {
-            // Initialize or Toggle state
             if (!sortState[cefName]) {
                 sortState[cefName] = { col: col, dir: 'desc' };
             } else {
                 if (sortState[cefName].col === col) {
-                    // Toggle direction
                     sortState[cefName].dir = sortState[cefName].dir === 'desc' ? 'asc' : 'desc';
                 } else {
-                    // New column, default to desc for metrics
                     sortState[cefName] = { col: col, dir: 'desc' };
                 }
             }
@@ -189,156 +316,137 @@
                 const data = await response.json();
 
                 if (data.error) {
-                    document.getElementById('status-log').innerText = "System Status: Fetching initial data from APIs... (This takes ~90s)";
+                    document.getElementById('status-badge').innerText = "Generating Data...";
+                    document.getElementById('status-badge').style.color = "orange";
                     return;
                 }
 
                 globalData = data;
+                document.getElementById('status-badge').innerText = "Live";
+                document.getElementById('status-badge').style.color = "var(--pos-color)";
                 renderDashboard();
 
             } catch (error) {
                 console.error("Fetch error:", error);
+                document.getElementById('status-badge').innerText = "Connection Error";
+                document.getElementById('status-badge').style.color = "var(--neg-color)";
             }
         }
 
         function renderDashboard() {
             if (!globalData) return;
-
             const data = globalData;
-            document.getElementById('timestamp').innerText = "Last Updated: " + data.last_updated;
-            document.getElementById('status-log').innerText = `System Status: Data Refreshed at ${data.last_updated}`;
 
-            // 1. Render Summary Cards
-            const grid = document.getElementById('dashboard-grid');
-            grid.innerHTML = '';
+            document.getElementById('timestamp').innerText = data.last_updated;
+
+            // 1. Summaries
+            const summaryContainer = document.getElementById('summaries-container');
+            summaryContainer.innerHTML = '';
 
             data.cefs.forEach(cef => {
-                const card = document.createElement('div');
-                card.className = 'card';
+                const navVal = cef.implied_move;
+                const colorClass = navVal > 0 ? 'text-pos' : (navVal < 0 ? 'text-neg' : 'text-neu');
+                const sign = navVal > 0 ? '+' : '';
 
-                const colorClass = cef.implied_move > 0 ? 'positive' : (cef.implied_move < 0 ? 'negative' : 'neutral');
-                const sign = cef.implied_move > 0 ? '+' : '';
-
-                card.innerHTML = `
-                    <span class="symbol">${cef.name}</span>
-                    <div class="nav-change ${colorClass}">${sign}${cef.implied_move.toFixed(3)}%</div>
-                    <div style="color:#aaa; font-size:0.8em;">Weight: ${cef.tracked_weight}%</div>
+                summaryContainer.innerHTML += `
+                    <div class="kpi-card">
+                        <div class="kpi-title">${cef.name}</div>
+                        <div class="kpi-value ${colorClass}">${sign}${navVal.toFixed(3)}%</div>
+                        <div class="kpi-sub">${cef.tracked_weight}% Tracked</div>
+                    </div>
                 `;
-                grid.appendChild(card);
             });
 
-            // 2. Render Holdings Columns
-            const holdingsGrid = document.getElementById('holdings-grid');
-            holdingsGrid.innerHTML = '';
+            // 2. Holdings Columns
+            const holdingsContainer = document.getElementById('holdings-container');
+            holdingsContainer.innerHTML = '';
 
             data.cefs.forEach(cef => {
-                const col = document.createElement('div');
-                col.className = 'holdings-column';
-
-                let tableRows = '';
-                // Safe access to holdings
                 let holdings = cef.holdings || [];
 
-                // --- SORT LOGIC ---
+                // Sort
                 if (sortState[cef.name]) {
                     const s = sortState[cef.name];
                     holdings.sort((a, b) => {
                         let valA = a[s.col];
                         let valB = b[s.col];
-
-                        // Handle nulls for change
                         if (s.col === 'change') {
                             if (valA === null) valA = -999999;
                             if (valB === null) valB = -999999;
                         }
-
-                        // Handle string comparison for symbol
                         if (s.col === 'symbol') {
                             return s.dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
                         }
-
-                        if (valA < valB) return s.dir === 'asc' ? -1 : 1;
-                        if (valA > valB) return s.dir === 'asc' ? 1 : -1;
-                        return 0;
+                        return s.dir === 'asc' ? (valA < valB ? -1 : 1) : (valA > valB ? -1 : 1);
                     });
                 } else {
-                    // Default Sort: Weight Descending
+                    // Default sort
                     holdings.sort((a, b) => b.weight - a.weight);
                 }
 
+                // Build Rows
+                let rows = '';
                 if (holdings.length === 0) {
-                    tableRows = '<tr><td colspan="3" style="text-align:center;color:#666;">Loading...</td></tr>';
+                    rows = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#555;">No Data</td></tr>';
                 } else {
                     holdings.forEach(h => {
-                        let chgDisplay = '<span style="color:#666;">...</span>';
-                        let chgClass = 'neutral';
-
+                        let chgHtml = '<span class="text-neu">...</span>';
                         if (h.change !== null) {
-                            const chgColor = h.change > 0 ? 'positive' : (h.change < 0 ? 'negative' : 'neutral');
-                            const sign = h.change > 0 ? '+' : '';
-                            chgDisplay = `<span class="${chgColor}">${sign}${h.change.toFixed(2)}%</span>`;
+                            const cls = h.change > 0 ? 'text-pos' : (h.change < 0 ? 'text-neg' : 'text-neu');
+                            const sgn = h.change > 0 ? '+' : '';
+                            chgHtml = `<span class="${cls}">${sgn}${h.change.toFixed(2)}%</span>`;
                         }
-
-                        tableRows += `
+                        rows += `
                             <tr>
                                 <td>${h.symbol}</td>
-                                <td style="text-align:right;">${h.weight}%</td>
-                                <td style="text-align:right;">${chgDisplay}</td>
+                                <td>${h.weight}%</td>
+                                <td>${chgHtml}</td>
                             </tr>
                         `;
                     });
                 }
 
-                // Determine indicators
-                const getSortInd = (key) => {
-                    if (!sortState[cef.name]) return key === 'weight' ? '▼' : ''; // Default
-                    if (sortState[cef.name].col !== key) return '';
-                    return sortState[cef.name].dir === 'asc' ? '▲' : '▼';
+                const getArrow = (col) => {
+                    const s = sortState[cef.name];
+                    if (!s && col === 'weight') return '▼';
+                    if (s && s.col === col) return s.dir === 'asc' ? '▲' : '▼';
+                    return '';
                 };
 
-                col.innerHTML = `
-                    <div class="column-header">${cef.name} Holdings</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="cursor:pointer" onclick="toggleSort('${cef.name}', 'symbol')">Sym ${getSortInd('symbol')}</th>
-                                <th style="text-align:right; cursor:pointer" onclick="toggleSort('${cef.name}', 'weight')">Wgt ${getSortInd('weight')}</th>
-                                <th style="text-align:right; cursor:pointer" onclick="toggleSort('${cef.name}', 'change')">%Chg ${getSortInd('change')}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows}
-                        </tbody>
-                    </table>
+                holdingsContainer.innerHTML += `
+                    <div class="holdings-col">
+                        <div class="col-header">${cef.name}</div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th onclick="toggleSort('${cef.name}', 'symbol')">Sym ${getArrow('symbol')}</th>
+                                        <th onclick="toggleSort('${cef.name}', 'weight')">Wgt ${getArrow('weight')}</th>
+                                        <th onclick="toggleSort('${cef.name}', 'change')">%Chg ${getArrow('change')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rows}</tbody>
+                            </table>
+                        </div>
+                    </div>
                 `;
-                holdingsGrid.appendChild(col);
             });
         }
 
         async function sendTelegram() {
-            const btn = document.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Sending...";
+            const btn = document.getElementById('refresh-btn');
             btn.disabled = true;
-
+            btn.innerText = "...";
             try {
-                const response = await fetch('/send_telegram', { method: 'POST' });
-                const result = await response.json();
-                if (result.success) {
-                    alert("Message sent successfully!");
-                } else {
-                    alert("Error: " + result.message);
-                }
-            } catch (e) {
-                alert("Request failed");
-            }
-
-            btn.innerText = originalText;
+                await fetch('/send_telegram', { method: 'POST' });
+                alert("Sent!");
+            } catch (e) { alert("Failed"); }
             btn.disabled = false;
+            btn.innerText = "Send Tele Update";
         }
 
-        setInterval(fetchData, 2000); // Poll every 2 seconds
-        fetchData(); // Initial call
+        setInterval(fetchData, 2000);
+        fetchData();
     </script>
 </body>
 
