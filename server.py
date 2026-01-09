@@ -39,8 +39,27 @@ memory_cache = {
     "last_updated": 0,
     "data": None
 }
-# Alert State (In-Memory: Will reset if Vercel cold-boots, but persists on warm instances)
-cef_alert_states = {} 
+# Alert State Logic with /tmp persistence
+ALERT_STATE_FILE = "/tmp/alert_state.json"
+
+def load_alert_states():
+    try:
+        if os.path.exists(ALERT_STATE_FILE):
+            with open(ALERT_STATE_FILE, 'r') as f:
+                return json.load(f)
+    except:
+        pass
+    return {}
+
+def save_alert_states(states):
+    try:
+        with open(ALERT_STATE_FILE, 'w') as f:
+            json.dump(states, f)
+    except:
+        pass
+
+# Initialize global state from disk if possible
+cef_alert_states = load_alert_states()
 
 def send_telegram_message(message):
     try:
@@ -102,13 +121,19 @@ def fetch_yahoo_snapshot(symbols):
 
 def generate_data():
     global cef_alert_states
+    # Refresh state from disk just in case logic splits
+    disk_states = load_alert_states()
+    if disk_states:
+        cef_alert_states.update(disk_states)
+
     all_cefs = get_holdings()
     if not all_cefs:
         return {"error": "Holdings not found"}
 
-    # Initialize alert states if empty
-    if not cef_alert_states:
-        cef_alert_states = {cef: 0 for cef in all_cefs.keys()}
+    # Initialize keys
+    for cef in all_cefs.keys():
+        if cef not in cef_alert_states:
+            cef_alert_states[cef] = 0
 
     unique_symbols = set()
     for holdings in all_cefs.values():
@@ -125,6 +150,8 @@ def generate_data():
         "last_updated": timestamp,
         "cefs": []
     }
+    
+    state_changed = False
 
     for cef_name, holdings in all_cefs.items():
         total_weighted_change = 0.0
@@ -177,7 +204,7 @@ def generate_data():
             print(f"ALERT TRIGGERED: {cef_name}")
             send_telegram_message(alert_msg)
             cef_alert_states[cef_name] = alert_level
-        # No reset logic to check 'once per day' (imperfect on Vercel but best effort)
+            state_changed = True
 
         dashboard_data["cefs"].append({
             "name": cef_name,
@@ -187,6 +214,9 @@ def generate_data():
             "holdings": detailed_holdings
         })
     
+    if state_changed:
+        save_alert_states(cef_alert_states)
+
     return dashboard_data
 
 @app.route('/')
