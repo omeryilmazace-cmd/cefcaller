@@ -33,22 +33,26 @@ HOLDINGS_FILE = "all_holdings.json"
 DASHBOARD_FILE = "dashboard_data.json" # Local fallback
 CACHE_FILE = "/tmp/dashboard_cache.json" # For Vercel ephemeral storage
 
-# Cache settings
+# Cache and State
 CACHE_DURATION = 60
 memory_cache = {
     "last_updated": 0,
     "data": None
 }
+# Alert State (In-Memory: Will reset if Vercel cold-boots, but persists on warm instances)
+cef_alert_states = {} 
 
 def send_telegram_message(message):
     try:
         if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+            print("Telegram keys missing")
             return False
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
         requests.post(url, json=payload, timeout=5)
         return True
-    except:
+    except Exception as e:
+        print(f"Telegram Err: {e}")
         return False
 
 def get_holdings():
@@ -97,9 +101,14 @@ def fetch_yahoo_snapshot(symbols):
         return {}
 
 def generate_data():
+    global cef_alert_states
     all_cefs = get_holdings()
     if not all_cefs:
         return {"error": "Holdings not found"}
+
+    # Initialize alert states if empty
+    if not cef_alert_states:
+        cef_alert_states = {cef: 0 for cef in all_cefs.keys()}
 
     unique_symbols = set()
     for holdings in all_cefs.values():
@@ -143,6 +152,33 @@ def generate_data():
                 "source": src
             })
             
+        # --- ALERT LOGIC ---
+        current_abs_change = abs(total_weighted_change)
+        alert_level = 0
+        emoji = ""
+        
+        if current_abs_change >= 1.0:
+            alert_level = 2
+            emoji = "🚨🚨"
+        elif current_abs_change >= 0.5:
+            alert_level = 1
+            emoji = "⚠️"
+        
+        # Safe access to state
+        last_lvl = cef_alert_states.get(cef_name, 0)
+        
+        if alert_level > last_lvl:
+            direction = "UP" if total_weighted_change > 0 else "DOWN"
+            alert_msg = (
+                f"{emoji} {cef_name} NAV Alert\n"
+                f"Implied NAV: {direction} {total_weighted_change:+.2f}%\n"
+                f"Driven by {total_weight_tracked:.1f}% reported holdings."
+            )
+            print(f"ALERT TRIGGERED: {cef_name}")
+            send_telegram_message(alert_msg)
+            cef_alert_states[cef_name] = alert_level
+        # No reset logic to check 'once per day' (imperfect on Vercel but best effort)
+
         dashboard_data["cefs"].append({
             "name": cef_name,
             "implied_move": round(total_weighted_change, 3),
@@ -156,6 +192,18 @@ def generate_data():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/cron')
+def cron_check():
+    """Endpoint for Periodic Monitoring Service (e.g. Cron-job.org)"""
+    # Force regeneration to check alerts
+    data = generate_data()
+    now = time.time()
+    if "error" not in data:
+        memory_cache['data'] = data
+        memory_cache['last_updated'] = now
+    
+    return jsonify({"status": "checked", "time": data.get("last_updated")})
 
 @app.route('/data')
 def get_data():
