@@ -49,45 +49,74 @@ def send_telegram_message(message):
 
 def fetch_yahoo_snapshot(symbols):
     """
-    Fetch snapshot data from Yahoo Finance for a list of symbols.
-    Calculates change % based on (Last Price - Prev Close) / Prev Close.
+    Improved Yahoo Fetch:
+    1. Fetches daily data to get the 'Reference Close' (Last Session).
+    2. Fetches 1m data (including pre-market) to get the 'Live Price'.
+    3. Calculates change % relative to that Reference Close.
     """
-    print(f"{Fore.MAGENTA}Fetching Yahoo Batch for {len(symbols)} tickers...")
+    print(f"{Fore.MAGENTA}Fetching Yahoo Real-time for {len(symbols)} tickers...")
     try:
-        # Download 5 days to ensure we have previous close even after weekends/holidays
         tickers_str = " ".join(symbols)
-        data = yf.download(tickers_str, period="5d", interval="1d", progress=False, threads=True)
+        
+        # 1. Get Daily Data for the baseline (Last 5 days)
+        # We need the most recent COMPLETED day's close.
+        daily_df = yf.download(tickers_str, period="5d", interval="1d", progress=False, threads=True)
+        
+        # 2. Get Live Data (Pre-market included)
+        # Period 1d, Interval 1m is the most up-to-date
+        live_df = yf.download(tickers_str, period="1d", interval="1m", include_prepost=True, progress=False, threads=True)
         
         results = {}
         is_multi = len(symbols) > 1
         
         for sym in symbols:
             try:
+                # --- Find Baseline (Prev Close) ---
                 if is_multi:
-                    if 'Close' in data and sym in data['Close']:
-                        closes = data['Close'][sym].dropna()
-                    else:
-                        continue
+                    if 'Close' not in daily_df or sym not in daily_df['Close']: continue
+                    daily_series = daily_df['Close'][sym].dropna()
                 else:
-                    closes = data['Close'].dropna()
+                    daily_series = daily_df['Close'].dropna()
                 
-                if len(closes) >= 2:
-                    last_price = float(closes.iloc[-1])
-                    prev_close = float(closes.iloc[-2])
-                    
-                    if prev_close > 0:
-                        change_pct = ((last_price - prev_close) / prev_close) * 100
-                        results[sym] = {
-                            "price": last_price,
-                            "change_percent": change_pct,
-                            "source": "YAHOO"
-                        }
+                if daily_series.empty: continue
+                
+                # --- Find Live Price ---
+                if is_multi:
+                    if 'Close' not in live_df or sym not in live_df['Close']:
+                        # If no live row for today yet, use daily's last row
+                        live_price = float(daily_series.iloc[-1])
+                        last_session_close = float(daily_series.iloc[-2]) if len(daily_series) > 1 else None
+                    else:
+                        live_series = live_df['Close'][sym].dropna()
+                        if live_series.empty:
+                            live_price = float(daily_series.iloc[-1])
+                            last_session_close = float(daily_series.iloc[-2]) if len(daily_series) > 1 else None
+                        else:
+                            live_price = float(live_series.iloc[-1])
+                            # In this case, daily_series[-1] IS the baseline (Friday's close)
+                            last_session_close = float(daily_series.iloc[-1])
+                else:
+                    live_series = live_df['Close'].dropna()
+                    if live_series.empty:
+                        live_price = float(daily_series.iloc[-1])
+                        last_session_close = float(daily_series.iloc[-2]) if len(daily_series) > 1 else None
+                    else:
+                        live_price = float(live_series.iloc[-1])
+                        last_session_close = float(daily_series.iloc[-1])
+
+                if last_session_close and last_session_close > 0:
+                    change_pct = ((live_price - last_session_close) / last_session_close) * 100
+                    results[sym] = {
+                        "price": live_price,
+                        "change_percent": change_pct,
+                        "source": "YAHOO"
+                    }
             except Exception:
                 continue
                 
         return results
     except Exception as e:
-        print(f"{Fore.RED}Yahoo Batch Error: {e}")
+        print(f"{Fore.RED}Yahoo Live Error: {e}")
         return {}
 
 def load_reference():
