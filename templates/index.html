@@ -7,7 +7,7 @@
     <title>CEF Monitor Pro</title>
     <!-- Google Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -23,7 +23,8 @@
             --neg-color: #ef4444;
             /* Red */
             --font-main: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --font-mono: 'Roboto Mono', monospace;
+            /* Switched from JetBrains Mono to avoid dots in 0 */
         }
 
         * {
@@ -119,6 +120,7 @@
             font-family: var(--font-mono);
             font-size: 1.1rem;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .kpi-sub {
@@ -234,6 +236,17 @@
 
         tr:hover {
             background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Stock Link */
+        .stock-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .stock-link:hover {
+            text-decoration: underline;
         }
 
         /* Utility Colors */
@@ -398,7 +411,11 @@
                         }
                         rows += `
                             <tr>
-                                <td>${h.symbol}</td>
+                                <td>
+                                    <a href="https://finance.yahoo.com/quote/${h.symbol}" target="_blank" class="stock-link">
+                                        ${h.symbol}
+                                    </a>
+                                </td>
                                 <td>${h.weight}%</td>
                                 <td>${chgHtml}</td>
                             </tr>
