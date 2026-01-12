@@ -279,8 +279,8 @@ def main():
         else:
             print("Yahoo: No data returned. Keeping old values.")
 
-        print("Cycle complete. Waiting 60s...")
-        time.sleep(60)
+        print("Cycle complete. Waiting 10s...")
+        time.sleep(10)
 
 if __name__ == "__main__":
     main()
