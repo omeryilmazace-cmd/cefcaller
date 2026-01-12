@@ -59,10 +59,10 @@ def fetch_yahoo_snapshot(symbols):
         tickers_str = " ".join(symbols)
         
         # 1. Get Daily Data (Last 7 days to be safe for holidays/weekends)
-        daily_df = yf.download(tickers_str, period="7d", interval="1d", progress=False, threads=True)
+        daily_df = yf.download(tickers_str, period="7d", interval="1d", progress=False, threads=True, auto_adjust=False)
         
         # 2. Get Live Data (Pre-market included)
-        live_df = yf.download(tickers_str, period="1d", interval="1m", include_prepost=True, progress=False, threads=True)
+        live_df = yf.download(tickers_str, period="1d", interval="1m", prepost=True, progress=False, threads=True, auto_adjust=False)
         
         today_date = datetime.datetime.now().date()
         results = {}
